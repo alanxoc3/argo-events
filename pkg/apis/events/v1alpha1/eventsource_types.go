@@ -1330,6 +1330,14 @@ type EmitterEventSource struct {
 // RedisEventSource describes an event source for the Redis PubSub.
 // More info at https://godoc.org/github.com/go-redis/redis#example-PubSub
 type RedisEventSource struct {
+	// URL is the redis url to connect to. This is parsed using redis.ParseURL.
+	// If set, this takes precedence over HostAddress and other connection fields.
+	// Format: redis://<user>:<password>@<host>:<port>/<db_number>
+	// +optional
+	URL string `json:"url,omitempty" protobuf:"bytes,11,opt,name=url"`
+	// URLSecret refers to the K8s secret that holds the redis url. Used only if URL is not set.
+	// +optional
+	URLSecret *corev1.SecretKeySelector `json:"urlSecret,omitempty" protobuf:"bytes,12,opt,name=urlSecret"`
 	// HostAddress refers to the address of the Redis host/server
 	HostAddress string `json:"hostAddress" protobuf:"bytes,1,opt,name=hostAddress"`
 	// Password required for authentication if any.
@@ -1365,6 +1373,14 @@ type RedisEventSource struct {
 // RedisStreamEventSource describes an event source for
 // Redis streams (https://redis.io/topics/streams-intro)
 type RedisStreamEventSource struct {
+	// URL is the redis url to connect to. This is parsed using redis.ParseURL.
+	// If set, this takes precedence over HostAddress and other connection fields.
+	// Format: redis://<user>:<password>@<host>:<port>/<db_number>
+	// +optional
+	URL string `json:"url,omitempty" protobuf:"bytes,11,opt,name=url"`
+	// URLSecret refers to the K8s secret that holds the redis url. Used only if URL is not set.
+	// +optional
+	URLSecret *corev1.SecretKeySelector `json:"urlSecret,omitempty" protobuf:"bytes,12,opt,name=urlSecret"`
 	// HostAddress refers to the address of the Redis host/server (master instance)
 	HostAddress string `json:"hostAddress" protobuf:"bytes,1,opt,name=hostAddress"`
 	// Password required for authentication if any.

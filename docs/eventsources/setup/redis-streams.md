@@ -52,6 +52,36 @@ Example:
 
 Redis stream event-source specification is available [here](../../APIs.md#argoproj.io/v1alpha1.RedisStreamEventSource).
 
+### Connection Configuration
+
+You can configure the Redis connection in three ways:
+
+1. **Using individual fields** (traditional approach):
+   ```yaml
+   hostAddress: redis.argo-events.svc:6379
+   db: 0
+   password:
+     name: redis-password
+     key: password
+   username: myuser
+   ```
+
+2. **Using URL** (inline connection string):
+   ```yaml
+   url: redis://:mypassword@redis.argo-events.svc:6379/0
+   ```
+
+3. **Using URLSecret** (recommended for security):
+   ```yaml
+   urlSecret:
+     name: redis-url-secret
+     key: url
+   ```
+
+The URL format follows the Redis connection string specification: `redis://<user>:<password>@<host>:<port>/<db_number>`.
+
+If multiple connection methods are provided, the precedence order is: `urlSecret` > `url` > individual fields (`hostAddress`, `password`, etc.).
+
 ## Setup
 
 1.  Follow the [documentation](https://kubernetes.io/docs/tutorials/configuration/configure-redis-using-configmap/#real-world-example-configuring-redis-using-a-configmap) to set up Redis database.

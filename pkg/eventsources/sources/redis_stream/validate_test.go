@@ -33,7 +33,7 @@ func TestValidateRedisEventSource(t *testing.T) {
 
 	err := listener.ValidateEventSource(context.Background())
 	assert.Error(t, err)
-	assert.Equal(t, "host address must be specified", err.Error())
+	assert.Equal(t, "one of url, urlSecret, or hostAddress must be specified", err.Error())
 
 	content, err := os.ReadFile(fmt.Sprintf("%s/%s", sources.EventSourceDir, "redis-streams.yaml"))
 	assert.Nil(t, err)

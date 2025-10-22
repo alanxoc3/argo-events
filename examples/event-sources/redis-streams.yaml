@@ -33,6 +33,25 @@ spec:
       streams:
         - FOO
 
+#    example-with-url:
+#      # URL is the Redis connection URL (parsed using redis.ParseURL).
+#      # If set, this takes precedence over hostAddress, password, db, and username.
+#      # Format: redis://<user>:<password>@<host>:<port>/<db_number>
+#      # +optional
+#      url: redis://:mypassword@redis.argo-events.svc:6379/0
+#      streams:
+#        - FOO
+#
+#    example-with-url-secret:
+#      # URLSecret refers to the K8s secret that holds the Redis connection URL.
+#      # If set, this takes precedence over url, hostAddress, and other connection fields.
+#      # +optional
+#      urlSecret:
+#        name: redis-url-secret
+#        key: url
+#      streams:
+#        - FOO
+
 #    example-tls:
 #      hostAddress: redis.argo-events.svc:6379
 #      db: 0

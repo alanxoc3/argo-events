@@ -31,8 +31,8 @@ func validate(eventSource *v1alpha1.RedisStreamEventSource) error {
 	if eventSource == nil {
 		return v1alpha1.ErrNilEventSource
 	}
-	if eventSource.HostAddress == "" {
-		return fmt.Errorf("host address must be specified")
+	if eventSource.URL == "" && eventSource.URLSecret == nil && eventSource.HostAddress == "" {
+		return fmt.Errorf("one of url, urlSecret, or hostAddress must be specified")
 	}
 	if eventSource.Streams == nil {
 		return fmt.Errorf("stream/streams must be specified")
