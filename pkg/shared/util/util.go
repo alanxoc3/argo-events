@@ -278,14 +278,18 @@ func VolumesFromSecretsOrConfigMaps(t reflect.Type, objs ...interface{}) ([]v1.V
 		for _, v := range values {
 			selector := v.(*v1.SecretKeySelector)
 			vol, mount := GenerateSecretVolumeSpecs(selector)
-			resultVolumes = append(resultVolumes, vol)
+			if selector.Optional == nil || !*selector.Optional {
+				resultVolumes = append(resultVolumes, vol)
+			}
 			resultMounts = append(resultMounts, mount)
 		}
 	case aev1.ConfigMapKeySelectorType:
 		for _, v := range values {
 			selector := v.(*v1.ConfigMapKeySelector)
 			vol, mount := GenerateConfigMapVolumeSpecs(selector)
-			resultVolumes = append(resultVolumes, vol)
+			if selector.Optional == nil || !*selector.Optional {
+				resultVolumes = append(resultVolumes, vol)
+			}
 			resultMounts = append(resultMounts, mount)
 		}
 	default:

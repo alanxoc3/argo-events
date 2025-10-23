@@ -156,6 +156,60 @@ func TestVolumesFromSecretsOrConfigMaps(t *testing.T) {
 		assert.Equal(t, len(vols), 6)
 		assert.Equal(t, len(mounts), 6)
 	})
+
+	t.Run("test optional secret volumes are skipped but mounts are included", func(t *testing.T) {
+		optionalTrue := true
+		testObj := struct {
+			Secret *corev1.SecretKeySelector
+		}{
+			Secret: &corev1.SecretKeySelector{
+				Key: "test-key",
+				LocalObjectReference: corev1.LocalObjectReference{
+					Name: "test-secret",
+				},
+				Optional: &optionalTrue,
+			},
+		}
+		vols, mounts := VolumesFromSecretsOrConfigMaps(aev1.SecretKeySelectorType, &testObj)
+		assert.Equal(t, 0, len(vols))
+		assert.Equal(t, 1, len(mounts))
+	})
+
+	t.Run("test optional configmap volumes are skipped but mounts are included", func(t *testing.T) {
+		optionalTrue := true
+		testObj := struct {
+			ConfigMap *corev1.ConfigMapKeySelector
+		}{
+			ConfigMap: &corev1.ConfigMapKeySelector{
+				Key: "test-key",
+				LocalObjectReference: corev1.LocalObjectReference{
+					Name: "test-configmap",
+				},
+				Optional: &optionalTrue,
+			},
+		}
+		vols, mounts := VolumesFromSecretsOrConfigMaps(aev1.ConfigMapKeySelectorType, &testObj)
+		assert.Equal(t, 0, len(vols))
+		assert.Equal(t, 1, len(mounts))
+	})
+
+	t.Run("test non-optional secret volumes are included", func(t *testing.T) {
+		optionalFalse := false
+		testObj := struct {
+			Secret *corev1.SecretKeySelector
+		}{
+			Secret: &corev1.SecretKeySelector{
+				Key: "test-key",
+				LocalObjectReference: corev1.LocalObjectReference{
+					Name: "test-secret",
+				},
+				Optional: &optionalFalse,
+			},
+		}
+		vols, mounts := VolumesFromSecretsOrConfigMaps(aev1.SecretKeySelectorType, &testObj)
+		assert.Equal(t, 1, len(vols))
+		assert.Equal(t, 1, len(mounts))
+	})
 }
 
 func fakeTLSConfig(t *testing.T, insecureSkipVerify bool) *aev1.TLSConfig {
